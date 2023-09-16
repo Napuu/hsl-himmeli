@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  hsl-himmeli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hsl-himmeli
+    volumes:
+      - ./hsl-himmeli.sqlite:/app/hsl-himmeli.sqlite
+    secrets:
+      - digitransit-apikey
+    environment:
+      - DIGITRANSIT_APIKEY_FILE=/run/secrets/digitransit-apikey
+secrets:
+  digitransit-apikey:
+    file: secret/digitransit_apikey
