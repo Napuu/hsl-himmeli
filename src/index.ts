@@ -6,7 +6,7 @@ const useMockData = false;
 
 const DIGITRANSIT_APIKEY_FILE = process.env.DIGITRANSIT_APIKEY_FILE;
 const DIGITRANSIT_APIKEY_VARIABLE = process.env.DIGITRANSIT_APIKEY;
-const DIGITRANSIT_APIKEY = DIGITRANSIT_APIKEY_FILE.length > 0 ?
+const DIGITRANSIT_APIKEY = DIGITRANSIT_APIKEY_FILE?.length > 0 ?
     fs.readFileSync(DIGITRANSIT_APIKEY_FILE, "utf-8") :
     DIGITRANSIT_APIKEY_VARIABLE;
 // Function that fetches city bike availability data from HSL API
@@ -63,4 +63,21 @@ const run = async () => {
     }
 }
 
-run().then(() => console.log("Done!")).catch(e => console.log(e))
+const serve = () => {
+    Bun.serve({
+        fetch(req) {
+            return new Response("Hello world!");
+            // TODO
+        },
+    });
+}
+
+(() => {
+    if (process.argv[2] === "scrape") {
+        run().then(() => console.log("Done!")).catch(e => console.log(e))
+    } else if (process.argv[2] === "serve") {
+        serve();
+    } else {
+        console.log("Usage: ts-node src/index.ts [scrape|serve]");
+    }
+})()
